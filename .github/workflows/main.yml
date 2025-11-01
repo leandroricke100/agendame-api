@@ -17,6 +17,19 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             set -e
-            cd ${{ secrets.TARGET_DIR }}
-            chmod +x deploy.sh
-            ./deploy.sh
+            cd /home/agendame-api/htdocs/agendame-api
+            git fetch origin
+            git checkout master
+            git reset --hard origin/master
+            if command -v composer >/dev/null 2>&1; then
+              composer install --no-dev --prefer-dist --optimize-autoloader
+            fi
+            php artisan migrate --force
+            php artisan cache:clear
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
+            php artisan optimize
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
