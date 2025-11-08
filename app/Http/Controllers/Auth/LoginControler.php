@@ -2,25 +2,31 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\InvalidAuthenticationException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 
 class LoginControler extends Controller
 {
-    public function __invoke(LoginRequest $request)
+
+    /**
+     * @param LoginRequest $request
+     * @return UserResource
+     * @throws InvalidAuthenticationException
+     */
+    public function __invoke(LoginRequest $request): UserResource
     {
+        // sleep(2);
         $input = $request->validated();
 
-        // $login = [
-        //     'email' => 'test@example.com',
-        //     'password' => 'password',
-        // ];
-
-        if (auth()->attempt($input)) {
-            request()->session()->regenerate();
-
-            return auth()->user();
+        if (!auth()->attempt($input)) {
+            throw new InvalidAuthenticationException();
         }
+
+        request()->session()->regenerate();
+
+        return new UserResource(auth()->user());
     }
 }
