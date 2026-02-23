@@ -1,35 +1,35 @@
-name: Deploy agendame-api
+# name: Deploy agendame-api
 
-on:
-  push:
-    branches: [ master ]
+# on:
+#   push:
+#     branches: [ master ]
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            set -e
-            cd /home/agendame-api/htdocs/agendame-api
-            git fetch origin
-            git checkout master
-            git reset --hard origin/master
-            if command -v composer >/dev/null 2>&1; then
-              composer install --no-dev --prefer-dist --optimize-autoloader
-            fi
-            php artisan migrate --force
-            php artisan cache:clear
-            php artisan config:clear
-            php artisan route:clear
-            php artisan view:clear
-            php artisan optimize
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Deploy via SSH
+#         uses: appleboy/ssh-action@v1.0.3
+#         with:
+#           host: ${{ secrets.SSH_HOST }}
+#           username: ${{ secrets.SSH_USER }}
+#           key: ${{ secrets.SSH_KEY }}
+#           port: ${{ secrets.SSH_PORT }}
+#           script: |
+#             set -e
+#             cd /home/agendame-api/htdocs/agendame-api
+#             git fetch origin
+#             git checkout master
+#             git reset --hard origin/master
+#             if command -v composer >/dev/null 2>&1; then
+#               composer install --no-dev --prefer-dist --optimize-autoloader
+#             fi
+#             php artisan migrate --force
+#             php artisan cache:clear
+#             php artisan config:clear
+#             php artisan route:clear
+#             php artisan view:clear
+#             php artisan optimize
+#             php artisan config:cache
+#             php artisan route:cache
+#             php artisan view:cache
