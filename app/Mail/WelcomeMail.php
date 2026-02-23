@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -16,10 +16,7 @@ class WelcomeMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(public User $user) {}
 
     /**
      * Get the message envelope.
@@ -38,6 +35,9 @@ class WelcomeMail extends Mailable
     {
         return new Content(
             view: 'emails.welcome',
+            // with: [
+            //     'user' => $this->user,
+            // ],
         );
     }
 
